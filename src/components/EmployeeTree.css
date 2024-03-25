@@ -1,0 +1,17 @@
+.emp-hir-section {
+  display: flex;
+}
+.emp-section {
+  width: 300px; /* Adjust width as needed */
+  padding: 20px; /* Adjust padding as needed */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+  background-color: #ffffff; /* Background color */
+}
+.box {
+  width: 100px; /* Adjust width as needed */
+  height: 80px; /* Adjust height as needed */
+  padding: 10px; /* Padding inside the box */
+  margin: 20px;
+  border-bottom: 0.5px solid black;
+}
