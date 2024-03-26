@@ -13,7 +13,7 @@ interface nodeProps {
   level: string;
   managerId: string | null;
   team: string | null;
-  subordinates: nodeProps;
+  subordinates: nodeProps | null;
 }
 
 interface subordinatesProps {
@@ -23,7 +23,7 @@ interface subordinatesProps {
   managerId: string;
   name: string;
   phoneNumber: string;
-  subordinates: subordinatesProps;
+  subordinates: subordinatesProps[];
   team: string;
 }
 
@@ -36,7 +36,7 @@ interface DocArrayProps {
     level: string;
     managerId: string | null;
     team: string | null;
-    subordinates: subordinatesProps;
+    subordinates: subordinatesProps[];
   };
   depth: number;
 }
@@ -62,6 +62,7 @@ function buildHierarchy(employees: EmployeeProps[], managerId = "") {
 
 function printTree(node: subordinatesProps, depth = 0) {
   docArray.push({ node, depth });
+  console.log(docArray);
   if (node.subordinates) {
     node.subordinates.forEach((subordinate: subordinatesProps) =>
       printTree(subordinate, depth + 1)
