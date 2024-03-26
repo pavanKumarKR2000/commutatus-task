@@ -65,7 +65,6 @@ const UpdateForm = ({
   };
 
   const checkTeamExists = () => {
-    console.log(employeeData.team);
     if (getAllTeams().includes(employeeData.team) && type === levels.L3) {
       setTeamErrorMessage(true);
     } else {

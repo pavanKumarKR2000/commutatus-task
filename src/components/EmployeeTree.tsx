@@ -16,15 +16,28 @@ interface nodeProps {
   subordinates: nodeProps;
 }
 
-interface DocArrayProps {
+interface subordinatesProps {
+  email: string;
   id: string;
+  level: string;
+  managerId: string;
   name: string;
   phoneNumber: string;
-  email: string;
-  level: string;
-  managerId: string | null;
-  team: string | null;
-  subordinates: nodeProps;
+  subordinates: subordinatesProps;
+  team: string;
+}
+
+interface DocArrayProps {
+  node: {
+    id: string;
+    name: string;
+    phoneNumber: string;
+    email: string;
+    level: string;
+    managerId: string | null;
+    team: string | null;
+    subordinates: subordinatesProps;
+  };
   depth: number;
 }
 
@@ -47,10 +60,10 @@ function buildHierarchy(employees: EmployeeProps[], managerId = "") {
   return tree;
 }
 
-function printTree(node: nodeProps, depth = 0) {
+function printTree(node: subordinatesProps, depth = 0) {
   docArray.push({ node, depth });
   if (node.subordinates) {
-    node.subordinates.forEach((subordinate) =>
+    node.subordinates.forEach((subordinate: subordinatesProps) =>
       printTree(subordinate, depth + 1)
     );
   }
@@ -58,13 +71,13 @@ function printTree(node: nodeProps, depth = 0) {
 
 function RepeatBlock({ times }: { times: number }) {
   // Create an array of length 'times' filled with null values
-  const array = new Array(times).fill(null);
+  const array = new Array(times).fill(null).map((_, index) => ({ key: index }));
   return (
     <>
       {array.map((item, index) => (
         <span
           className="w-[100px] h-[80px] p-[10px] m-[20px]"
-          key={index}
+          key={item.key}
         ></span>
       ))}
     </>
@@ -92,15 +105,14 @@ const EmployeeTree = () => {
       {docArray.map(({ node, depth }) => (
         <>
           {node.level === levels.L3 && (
-            <div className="flex h-[100px] p-[10px]" key={node.name}>
+            <div className="flex h-[100px] p-[10px]" key={node.id}>
               <RepeatBlock times={depth} />
               <div className="flex align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
                 <div className="p-[20px]">Team Name : {node.team}</div>
-                {JSON.stringify({ node, depth })}
               </div>
             </div>
           )}
-          <div className="flex h-[100px] p-[10px]" key={node.name}>
+          <div className="flex h-[100px] p-[10px]" key={node.id + 1}>
             <RepeatBlock times={node.level === levels.L3 ? depth + 1 : depth} />
             <div className="flex items-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
               <ThumbnailWithLetter letter={node.name[0]} />
