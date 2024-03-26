@@ -1,6 +1,6 @@
 "use client";
 import { getSuperior, levels } from "@/lib/utils";
-import { useEmployee } from "@/zustand/store";
+import { EmployeeProps, useEmployee } from "@/zustand/store";
 import { FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "./ui/button";
@@ -15,47 +15,42 @@ import {
   SelectValue,
 } from "./ui/select";
 
-interface FormProps {
+interface UpdateFormProps {
+  employeeData: EmployeeProps;
   handleCloseDialog: () => void;
 }
 
-const Form = ({ handleCloseDialog }: FormProps) => {
-  const addEmployee = useEmployee((store) => store.addEmployee);
-  const employees = useEmployee((store) => store.employees);
+const UpdateForm = ({
+  employeeData: { id, name, phoneNumber, email, managerId, team, level },
+  handleCloseDialog,
+}: UpdateFormProps) => {
   const superiors = useEmployee((store) => store.getEmployeesByLevel);
   const getEmployeeById = useEmployee((store) => store.getEmployeeById);
+  const updateEmployee = useEmployee((store) => store.updateEmployee);
   const getAllTeams = useEmployee((store) => store.getAllTeams);
-
-  const [type, setType] = useState(
-    superiors(levels.L1).length === 0 ? levels.L1 : levels.L2
-  );
-
+  const [type, setType] = useState(level);
   const [teamErrorMessage, setTeamErrorMessage] = useState(false);
+
   const [employeeData, setEmployeeData] = useState({
-    employeeName: "",
-    phoneNumber: "",
-    email: "",
-    managerId: "",
-    team: "",
+    employeeName: name,
+    phoneNumber,
+    email,
+    managerId,
+    team,
+    level,
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let _team;
-
-    if (type === levels.L4) {
-      _team = getEmployeeById(employeeData.managerId).team;
-    }
-
-    addEmployee(
-      uuidv4(),
-      employeeData.employeeName.trim(),
-      employeeData.phoneNumber.trim(),
-      employeeData.email.trim(),
-      type,
-      employeeData.managerId.trim(),
-      employeeData.team || _team?.trim()
-    );
+    updateEmployee({
+      id,
+      name: employeeData.employeeName.trim(),
+      phoneNumber: employeeData.phoneNumber.trim(),
+      email: employeeData.email.trim(),
+      level: type,
+      managerId: employeeData.managerId,
+      team: employeeData.team,
+    });
 
     setEmployeeData({
       employeeName: "",
@@ -63,12 +58,14 @@ const Form = ({ handleCloseDialog }: FormProps) => {
       email: "",
       managerId: "",
       team: "",
+      level: "",
     });
 
     handleCloseDialog();
   };
 
   const checkTeamExists = () => {
+    console.log(employeeData.team);
     if (getAllTeams().includes(employeeData.team) && type === levels.L3) {
       setTeamErrorMessage(true);
     } else {
@@ -79,41 +76,24 @@ const Form = ({ handleCloseDialog }: FormProps) => {
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="">
-        <Label htmlFor="">Select type</Label>
-        <Select
-          defaultValue={
-            superiors(levels.L1).length === 0 ? levels.L1 : levels.L2
-          }
-          onValueChange={(type) => setType(type)}
-        >
+        <Label htmlFor="">Type</Label>
+        <Select defaultValue={level} onValueChange={(type) => setType(type)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select the team" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem
-                value={levels.L1}
-                disabled={superiors(levels.L1).length === 1}
-              >
+              <SelectItem value={levels.L1} disabled>
                 L1 (CEO)
               </SelectItem>
-              <SelectItem
-                value={levels.L2}
-                disabled={superiors(levels.L1).length === 0}
-              >
+              <SelectItem value={levels.L2} disabled>
                 L2 (Department head)
               </SelectItem>
-              <SelectItem
-                value={levels.L3}
-                disabled={superiors(levels.L2).length === 0}
-              >
+              <SelectItem value={levels.L3} disabled>
                 {" "}
                 L3 (Team lead)
               </SelectItem>
-              <SelectItem
-                value={levels.L4}
-                disabled={superiors(levels.L3).length === 0}
-              >
+              <SelectItem value={levels.L4} disabled>
                 {" "}
                 L4 (Team member)
               </SelectItem>
@@ -181,13 +161,13 @@ const Form = ({ handleCloseDialog }: FormProps) => {
               <Input
                 type="text"
                 name="team"
-                value={employeeData.team}
+                value={employeeData?.team || " "}
                 placeholder="Enter team"
                 onChange={(e) => {
+                  checkTeamExists();
                   setEmployeeData((prev) => {
                     return { ...prev, team: e.target.value };
                   });
-                  checkTeamExists();
                 }}
                 id="email"
                 required
@@ -201,12 +181,13 @@ const Form = ({ handleCloseDialog }: FormProps) => {
             <div className="space-y-1">
               <Label htmlFor="">Select superior</Label>
               <Select
-                required
+                defaultValue={getEmployeeById(managerId!).id}
                 onValueChange={(e) =>
                   setEmployeeData((prev) => {
                     return { ...prev, managerId: e };
                   })
                 }
+                required
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select the superior" />
@@ -224,28 +205,23 @@ const Form = ({ handleCloseDialog }: FormProps) => {
             </div>
           )}
           {/** row-6 */}
-          {type === levels.L4 && (
+          {/* {type === levels.L4 && (
             <div className="space-y-1">
               <Label htmlFor="email">team</Label>
               <Input
                 type="text"
                 name="team"
-                value={
-                  (employeeData.managerId &&
-                    (getEmployeeById((employeeData?.managerId as string) || "")
-                      .team as string)) ||
-                  ""
-                }
+                value={getEmployeeById(managerId as string).team as string}
                 disabled
                 id="email"
                 required
               />
             </div>
-          )}
+          )} */}
         </div>
         <div className="grid grid-cols-2 gap-2 py-8">
           <Button type="submit" disabled={teamErrorMessage}>
-            Add Item
+            Update Item
           </Button>
         </div>
       </div>
@@ -253,4 +229,4 @@ const Form = ({ handleCloseDialog }: FormProps) => {
   );
 };
 
-export default Form;
+export default UpdateForm;

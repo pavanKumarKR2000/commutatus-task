@@ -2,17 +2,41 @@
 
 import { useEmployee } from "@/zustand/store";
 import React from "react";
-import "./EmployeeTree.css";
+import { levels } from "@/lib/utils";
+import { EmployeeProps } from "@/zustand/store";
 
-const docArray = [];
+interface nodeProps {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  level: string;
+  managerId: string | null;
+  team: string | null;
+  subordinates: nodeProps;
+}
 
-function buildHierarchy(employees, managerId = "") {
-  console.log(employees);
-  const subordinates = employees.filter((emp) => emp.managerId === managerId);
-  console.log(subordinates);
+interface DocArrayProps {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  level: string;
+  managerId: string | null;
+  team: string | null;
+  subordinates: nodeProps;
+  depth: number;
+}
+
+let docArray: DocArrayProps[] = [];
+
+function buildHierarchy(employees: EmployeeProps[], managerId = "") {
+  const subordinates: EmployeeProps[] = employees.filter(
+    (emp: EmployeeProps) => emp.managerId === managerId
+  );
   if (subordinates.length === 0) return null;
 
-  const tree = [];
+  const tree: EmployeeProps[] = [];
   subordinates.forEach((subordinate) => {
     const node = {
       ...subordinate,
@@ -23,10 +47,7 @@ function buildHierarchy(employees, managerId = "") {
   return tree;
 }
 
-function printTree(node, depth = 0) {
-  let docHTML = `<div class="emp-hir-section"><span>${'<span class="box"></span>'.repeat(
-    depth
-  )}</span> <div class="emp-section"> <span>${node.name}</span></div></div>`;
+function printTree(node: nodeProps, depth = 0) {
   docArray.push({ node, depth });
   if (node.subordinates) {
     node.subordinates.forEach((subordinate) =>
@@ -35,29 +56,61 @@ function printTree(node, depth = 0) {
   }
 }
 
+function RepeatBlock({ times }: { times: number }) {
+  // Create an array of length 'times' filled with null values
+  const array = new Array(times).fill(null);
+  return (
+    <>
+      {array.map((item, index) => (
+        <span
+          className="w-[100px] h-[80px] p-[10px] m-[20px]"
+          key={index}
+        ></span>
+      ))}
+    </>
+  );
+}
+
+function ThumbnailWithLetter({ letter }: { letter: string }) {
+  return (
+    <div className="w-[50px] h-[50px] rounded-full bg-slate-300 flex justify-center align-center text-[24px] font-bold p-[5px]">
+      <div>{letter}</div>
+    </div>
+  );
+}
+
 const EmployeeTree = () => {
-  const employees = useEmployee((store) => store.employees);
+  docArray = [];
+  let employees = useEmployee((store) => store.employees);
   const hierarchy = buildHierarchy(employees);
   if (hierarchy) {
     hierarchy.forEach((root) => printTree(root));
   }
-  console.log(employees);
-  console.log(docArray);
+
   return (
-    <div>
-      {docArray.map((arr) => (
-        <div className="emp-hir-section" key={arr.name}>
-          <span>
-            {arr.length > 0 &&
-              arr.depth.map((arr) => (
-                <span key={arr.name} className="box"></span>
-              ))}
-          </span>
-          <div className="emp-section">
-            {" "}
-            <span>{arr.name}</span>
+    <div className="max-w-full">
+      {docArray.map(({ node, depth }) => (
+        <>
+          {node.level === levels.L3 && (
+            <div className="flex h-[100px] p-[10px]" key={node.name}>
+              <RepeatBlock times={depth} />
+              <div className="flex align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
+                <div className="p-[20px]">Team Name : {node.team}</div>
+                {JSON.stringify({ node, depth })}
+              </div>
+            </div>
+          )}
+          <div className="flex h-[100px] p-[10px]" key={node.name}>
+            <RepeatBlock times={node.level === levels.L3 ? depth + 1 : depth} />
+            <div className="flex items-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
+              <ThumbnailWithLetter letter={node.name[0]} />
+              <div className="p-[20px]">{node.name}</div>
+              <div className="p-[20px]">Level : {node.level}</div>
+              {/* <div className='emp-section-item'>Email : {node.email}</div>
+              <div className='emp-section-item'>Phone : {node.phoneNumber}</div> */}
+            </div>
           </div>
-        </div>
+        </>
       ))}
     </div>
   );

@@ -1,17 +1,40 @@
 .emp-hir-section {
   display: flex;
+  height: 100px; /* Adjust height as needed */
+  padding: 10px; /* Padding inside the box */
 }
 .emp-section {
-  width: 300px; /* Adjust width as needed */
+  display: flex;
+  align-items: center;
+  width: 1000px; /* Adjust width as needed */
   padding: 20px; /* Adjust padding as needed */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
   background-color: #ffffff; /* Background color */
+}
+.emp-section-item {
+  padding: 20px;
+}
+.team-hir-section {
+  display: flex;
+  height: 100px; /* Adjust height as needed */
+  padding: 10px; /* Padding inside the box */
+}
+.team-section {
+  display: flex;
+  align-items: center;
+  width: 1000px; /* Adjust width as needed */
+  padding: 20px; /* Adjust padding as needed */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+  background-color: #ffffff; /* Background color */
+}
+.team-section-item {
+  padding: 20px;
 }
 .box {
   width: 100px; /* Adjust width as needed */
   height: 80px; /* Adjust height as needed */
   padding: 10px; /* Padding inside the box */
   margin: 20px;
-  border-bottom: 0.5px solid black;
 }
