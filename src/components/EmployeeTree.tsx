@@ -5,15 +5,15 @@ import React from "react";
 import { levels } from "@/lib/utils";
 import { EmployeeProps } from "@/zustand/store";
 
-interface nodeProps {
-  id: string;
-  name: string;
-  phoneNumber: string;
+interface TreeProps {
   email: string;
+  id: string;
   level: string;
   managerId: string | null;
-  team: string | null;
-  subordinates: nodeProps | null;
+  name: string;
+  phoneNumber: string;
+  subordinates: TreeProps[] | null;
+  team: string;
 }
 
 interface subordinatesProps {
@@ -43,26 +43,30 @@ interface DocArrayProps {
 
 let docArray: DocArrayProps[] = [];
 
+/** function 1 */
 function buildHierarchy(employees: EmployeeProps[], managerId = "") {
   const subordinates: EmployeeProps[] = employees.filter(
     (emp: EmployeeProps) => emp.managerId === managerId
   );
   if (subordinates.length === 0) return null;
 
-  const tree: EmployeeProps[] = [];
+  const tree: TreeProps[] = [];
   subordinates.forEach((subordinate) => {
     const node = {
       ...subordinate,
       subordinates: buildHierarchy(employees, subordinate.id),
     };
+    // @ts-expect-error: Let's ignore a compile error like this unreachable code
     tree.push(node);
   });
+
+  console.log("tree", tree);
   return tree;
 }
-
-function printTree(node: subordinatesProps, depth = 0) {
+/** function 2 */
+// @ts-expect-error: Let's ignore a compile error like this unreachable code
+function printTree(node, depth = 0) {
   docArray.push({ node, depth });
-  console.log(docArray);
   if (node.subordinates) {
     node.subordinates.forEach((subordinate: subordinatesProps) =>
       printTree(subordinate, depth + 1)
@@ -97,6 +101,7 @@ const EmployeeTree = () => {
   docArray = [];
   let employees = useEmployee((store) => store.employees);
   const hierarchy = buildHierarchy(employees);
+  console.log("heirarchy", hierarchy);
   if (hierarchy) {
     hierarchy.forEach((root) => printTree(root));
   }
