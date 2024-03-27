@@ -1,7 +1,7 @@
 "use client";
 import { getSuperior, levels } from "@/lib/utils";
 import { EmployeeProps, useEmployee } from "@/zustand/store";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { OctagonAlert } from "lucide-react";
 
 interface UpdateFormProps {
   employeeData: EmployeeProps;
@@ -64,8 +65,14 @@ const UpdateForm = ({
     handleCloseDialog();
   };
 
-  const checkTeamExists = () => {
-    if (getAllTeams().includes(employeeData.team) && type === levels.L3) {
+  const checkTeamExists = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    if (
+      getAllTeams().includes(value) &&
+      type === levels.L3 &&
+      getEmployeeById(id).team !== value
+    ) {
       setTeamErrorMessage(true);
     } else {
       setTeamErrorMessage(false);
@@ -163,15 +170,20 @@ const UpdateForm = ({
                 value={employeeData?.team || " "}
                 placeholder="Enter team"
                 onChange={(e) => {
-                  checkTeamExists();
                   setEmployeeData((prev) => {
                     return { ...prev, team: e.target.value };
                   });
+                  checkTeamExists(e);
                 }}
                 id="email"
                 required
               />
-              {teamErrorMessage && <p>Team name already exists</p>}
+              {teamErrorMessage && (
+                <p className="w-full text-center p-1 bg-red-200 flex items-center rounded-md">
+                  <OctagonAlert className="h-4 w-4 mr-2" /> Team name already
+                  exists
+                </p>
+              )}
             </div>
           )}
 
@@ -204,19 +216,24 @@ const UpdateForm = ({
             </div>
           )}
           {/** row-6 */}
-          {/* {type === levels.L4 && (
+          {type === levels.L4 && (
             <div className="space-y-1">
               <Label htmlFor="email">team</Label>
               <Input
                 type="text"
                 name="team"
-                value={getEmployeeById(managerId as string).team as string}
+                value={
+                  (employeeData.managerId &&
+                    (getEmployeeById((employeeData?.managerId as string) || "")
+                      .team as string)) ||
+                  ""
+                }
                 disabled
                 id="email"
                 required
               />
             </div>
-          )} */}
+          )}
         </div>
         <div className="grid grid-cols-2 gap-2 py-8">
           <Button type="submit" disabled={teamErrorMessage}>

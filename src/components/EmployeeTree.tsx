@@ -60,7 +60,6 @@ function buildHierarchy(employees: EmployeeProps[], managerId = "") {
     tree.push(node);
   });
 
-  console.log("tree", tree);
   return tree;
 }
 /** function 2 */
@@ -101,7 +100,6 @@ const EmployeeTree = () => {
   docArray = [];
   let employees = useEmployee((store) => store.employees);
   const hierarchy = buildHierarchy(employees);
-  console.log("heirarchy", hierarchy);
   if (hierarchy) {
     hierarchy.forEach((root) => printTree(root));
   }
@@ -113,7 +111,7 @@ const EmployeeTree = () => {
           {node.level === levels.L3 && (
             <div className="flex h-[100px] p-[10px]" key={node.id}>
               <RepeatBlock times={depth} />
-              <div className="flex align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
+              <div className="flex items-center align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
                 <div className="p-[20px]">Team Name : {node.team}</div>
               </div>
             </div>
