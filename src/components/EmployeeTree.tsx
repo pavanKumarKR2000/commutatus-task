@@ -105,7 +105,7 @@ const EmployeeTree = () => {
   }
 
   return (
-    <div className="max-w-full">
+    <div className="max-w-full w-full border border-slate-200">
       {employees.length === 0 && (
         <p className="text-center py-8">Nothing here!</p>
       )}
