@@ -16,8 +16,8 @@
 - you can filter an employee by name,email and phone number
 
 ## Technologies used in the projects are
--next js
--typescript
--tailwind css for styling
--shadcn ui for basic components
--zustand for state management and persisting the state
+- next js
+- typescript
+- tailwind css for styling
+- shadcn ui for basic components
+- zustand for state management and persisting the state
