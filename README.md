@@ -4,7 +4,7 @@
 <a href="https://commutatus-task.vercel.app/">click for demo</a>
 ## Instructions
 - to create employee click add employee button on navabr
-- select the position of the employee you want to select
+- select the position of the employee you want to create
 - you can create department head only if CEO exists
 - you can create team lead only if department head exists
 - you can create team leader only if team lead exists
