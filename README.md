@@ -12,7 +12,7 @@
 - can join a team by selecting the team lead
 - you can see the employee table as well as employee hierarchy by changing the tab
 - you can edit an employee in the table by clicking the actions cell and clicking edit button
-- you can delete only a team member in the table by clicking the actions call and delete button
+- you can delete only a team member in the table by clicking the actions cell and delete button
 - you can filter an employee by name,email and phone number
 
 ## Technologies used in the projects are
