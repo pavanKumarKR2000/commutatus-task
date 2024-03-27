@@ -80,7 +80,7 @@ const EmployeesTable = () => {
               value={searchInput}
             />
             <Button type="button" onClick={() => setSearchInput("")}>
-              Get all rows
+              Reset
             </Button>
           </form>
         )}
