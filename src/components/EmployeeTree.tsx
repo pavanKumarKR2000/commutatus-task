@@ -1,9 +1,7 @@
 "use client";
 
-import { useEmployee } from "@/zustand/store";
-import React from "react";
 import { levels } from "@/lib/utils";
-import { EmployeeProps } from "@/zustand/store";
+import { EmployeeProps, useEmployee } from "@/zustand/store";
 
 interface TreeProps {
   email: string;
@@ -105,7 +103,7 @@ const EmployeeTree = () => {
   }
 
   return (
-    <div className="max-w-full w-full border border-slate-200">
+    <div className="max-w-full w-full border border-slate-200 overscroll-scroll">
       {employees.length === 0 && (
         <p className="text-center py-8">Nothing here!</p>
       )}

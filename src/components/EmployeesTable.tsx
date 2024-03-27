@@ -106,8 +106,8 @@ const EmployeesTable = () => {
             {(
               (searchInput.trim().length > 0 &&
                 employees.filter((emp) => {
-                  let searchStr = `${emp.name} ${emp.email} ${emp.phoneNumber}`;
-                  return searchStr.includes(searchInput);
+                  let searchStr = `${emp.name.toLocaleLowerCase()} ${emp.email.toLocaleLowerCase()} ${emp.phoneNumber.toLocaleUpperCase()}`;
+                  return searchStr.includes(searchInput.toLowerCase());
                 })) ||
               employees
             ).map((employee) => (

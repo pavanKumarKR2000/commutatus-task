@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="p-6 flex flex-col items-center gap-6">
       <Tabs defaultValue="table">
-        <TabsList className="flex items-center gap-4 w-fit">
+        <TabsList className="flex justify-center md:justify-start items-center gap-4 w-full md:w-fit">
           <TabsTrigger value="table">Table view</TabsTrigger>
           <TabsTrigger value="chart">Chart view</TabsTrigger>
         </TabsList>
