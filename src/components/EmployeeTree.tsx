@@ -106,28 +106,34 @@ const EmployeeTree = () => {
 
   return (
     <div className="max-w-full">
-      {docArray.map(({ node, depth }) => (
-        <>
-          {node.level === levels.L3 && (
-            <div className="flex h-[100px] p-[10px]" key={node.id}>
-              <RepeatBlock times={depth} />
-              <div className="flex items-center align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
-                <div className="p-[20px]">Team Name : {node.team}</div>
+      {employees.length === 0 && (
+        <p className="text-center py-8">Nothing here!</p>
+      )}
+      {employees.length > 0 &&
+        docArray.map(({ node, depth }) => (
+          <>
+            {node.level === levels.L3 && (
+              <div className="flex h-[100px] p-[10px]" key={node.id}>
+                <RepeatBlock times={depth} />
+                <div className="flex items-center align-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
+                  <div className="p-[20px]">Team Name : {node.team}</div>
+                </div>
+              </div>
+            )}
+            <div className="flex h-[100px] p-[10px]" key={node.id + 1}>
+              <RepeatBlock
+                times={node.level === levels.L3 ? depth + 1 : depth}
+              />
+              <div className="flex items-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
+                <ThumbnailWithLetter letter={node.name[0]} />
+                <div className="p-[20px]">{node.name}</div>
+                <div className="p-[20px]">Level : {node.level}</div>
+                {/* <div className='emp-section-item'>Email : {node.email}</div>
+              <div className='emp-section-item'>Phone : {node.phoneNumber}</div> */}
               </div>
             </div>
-          )}
-          <div className="flex h-[100px] p-[10px]" key={node.id + 1}>
-            <RepeatBlock times={node.level === levels.L3 ? depth + 1 : depth} />
-            <div className="flex items-center w-[1000px] p-[20px] rounded-md shadow-md bg-blue-100">
-              <ThumbnailWithLetter letter={node.name[0]} />
-              <div className="p-[20px]">{node.name}</div>
-              <div className="p-[20px]">Level : {node.level}</div>
-              {/* <div className='emp-section-item'>Email : {node.email}</div>
-              <div className='emp-section-item'>Phone : {node.phoneNumber}</div> */}
-            </div>
-          </div>
-        </>
-      ))}
+          </>
+        ))}
     </div>
   );
 };

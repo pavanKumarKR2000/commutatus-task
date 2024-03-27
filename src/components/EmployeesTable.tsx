@@ -70,98 +70,102 @@ const EmployeesTable = () => {
   return (
     <div className="w-full border border-slate-200">
       <div className="p-2">
-        <form className="flex items-center gap-4" onSubmit={handleSearch}>
-          <Input
-            type="search"
-            className="w-[40%]"
-            placeholder="Search by name,email,phone number"
-            onChange={(e) => setSearchInput(e.target.value)}
-            value={searchInput}
-          />
-          <Button type="button" onClick={() => setSearchInput("")}>
-            Get all rows
-          </Button>
-        </form>
+        {employees.length > 0 && (
+          <form className="flex items-center gap-4" onSubmit={handleSearch}>
+            <Input
+              type="search"
+              className="w-[40%]"
+              placeholder="Search by name,email,phone number"
+              onChange={(e) => setSearchInput(e.target.value)}
+              value={searchInput}
+            />
+            <Button type="button" onClick={() => setSearchInput("")}>
+              Get all rows
+            </Button>
+          </form>
+        )}
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>id</TableHead>
-            <TableHead>name</TableHead>
-            <TableHead>phone number</TableHead>
-            <TableHead>email</TableHead>
-            <TableHead>level</TableHead>
-            <TableHead>manager id</TableHead>
-            <TableHead>team</TableHead>
-            <TableHead>actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {(
-            (searchInput.trim().length > 0 &&
-              employees.filter((emp) => {
-                let searchStr = `${emp.name} ${emp.email} ${emp.phoneNumber}`;
-                if (searchStr.includes(searchInput)) {
-                  return true;
-                }
-                return false;
-              })) ||
-            employees
-          ).map((employee) => (
-            <TableRow key={employee.id}>
-              <TableCell className="font-medium">{employee.id}</TableCell>
-              <TableCell>{employee.name}</TableCell>
-              <TableCell>{employee.phoneNumber}</TableCell>
-              <TableCell>{employee.email}</TableCell>
-              <TableCell>{employee.level}</TableCell>
-              <TableCell>{employee.managerId}</TableCell>
-              <TableCell>{employee.team}</TableCell>
-
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <EllipsisVertical className="h-4 w-4" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {employee.level === levels.L4 && (
-                      <DropdownMenuItem
-                        onClick={() => handleDelete(employee.id)}
-                        className="px-0 w-full"
-                      >
-                        <Button className="w-full" variant="destructive">
-                          <Trash className="h-4 w-4 mr-2" />
-                          Delete
-                        </Button>
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuItem asChild>
-                      <Dialog
-                        open={isDialogOpen}
-                        onOpenChange={setIsDialogOpen}
-                      >
-                        <DialogTrigger
-                          asChild
-                          onClick={() => handleUpdate(employee.id)}
-                        >
-                          <Button className="w-full">
-                            <Pencil className="h-4 w-4 mr-2" /> Edit
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                          <UpdateForm
-                            employeeData={employeeData}
-                            handleCloseDialog={handleCloseDialog}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+      {employees.length === 0 && (
+        <p className="text-center py-8">Nothing here!</p>
+      )}
+      {employees.length > 0 && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>id</TableHead>
+              <TableHead>name</TableHead>
+              <TableHead>phone number</TableHead>
+              <TableHead>email</TableHead>
+              <TableHead>level</TableHead>
+              <TableHead>manager id</TableHead>
+              <TableHead>team</TableHead>
+              <TableHead>actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {(
+              (searchInput.trim().length > 0 &&
+                employees.filter((emp) => {
+                  let searchStr = `${emp.name} ${emp.email} ${emp.phoneNumber}`;
+                  return searchStr.includes(searchInput);
+                })) ||
+              employees
+            ).map((employee) => (
+              <TableRow key={employee.id}>
+                <TableCell className="font-medium">{employee.id}</TableCell>
+                <TableCell>{employee.name}</TableCell>
+                <TableCell>{employee.phoneNumber}</TableCell>
+                <TableCell>{employee.email}</TableCell>
+                <TableCell>{employee.level}</TableCell>
+                <TableCell>{employee.managerId}</TableCell>
+                <TableCell>{employee.team}</TableCell>
+
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <EllipsisVertical className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {employee.level === levels.L4 && (
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(employee.id)}
+                          className="px-0 w-full"
+                        >
+                          <Button className="w-full" variant="destructive">
+                            <Trash className="h-4 w-4 mr-2" />
+                            Delete
+                          </Button>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem asChild>
+                        <Dialog
+                          open={isDialogOpen}
+                          onOpenChange={setIsDialogOpen}
+                        >
+                          <DialogTrigger
+                            asChild
+                            onClick={() => handleUpdate(employee.id)}
+                          >
+                            <Button className="w-full">
+                              <Pencil className="h-4 w-4 mr-2" /> Edit
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-md">
+                            <UpdateForm
+                              employeeData={employeeData}
+                              handleCloseDialog={handleCloseDialog}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 };
