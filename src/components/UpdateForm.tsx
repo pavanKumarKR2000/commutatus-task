@@ -92,15 +92,16 @@ const UpdateForm = ({
               <SelectItem value={levels.L1} disabled>
                 L1 (CEO)
               </SelectItem>
+
               <SelectItem value={levels.L2} disabled>
                 L2 (Department head)
               </SelectItem>
+
               <SelectItem value={levels.L3} disabled>
-                {" "}
                 L3 (Team lead)
               </SelectItem>
+
               <SelectItem value={levels.L4} disabled>
-                {" "}
                 L4 (Team member)
               </SelectItem>
             </SelectGroup>
