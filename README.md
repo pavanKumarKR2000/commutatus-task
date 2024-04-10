@@ -1,7 +1,7 @@
 ## Employee management system
 ![banner1](https://github.com/pavanKumarKR2000/commutatus-task/blob/main/table.jpeg?raw=true)
 ![banner2](https://github.com/pavanKumarKR2000/commutatus-task/blob/main/chart.jpeg?raw=true)
-<a href="https://commutatus-task.vercel.app/">click for demo</a>
+<a href="https://employee-management-system-delta-ruby.vercel.app/">click for demo</a>
 ## Instructions
 - to create employee click add employee button on navabr
 - select the position of the employee you want to create
